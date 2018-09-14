@@ -43,7 +43,7 @@ namespace EQP_Sim
 
         public void On_Connection_Message(Socket handler, string Msg)
         {
-            
+
 
             string NodeAdr = "";
             string Type = "";
@@ -90,8 +90,37 @@ namespace EQP_Sim
             string ReturnMessage = "";
             if (Msg.IndexOf("$") != -1)
             {
+                string ReturnValue = "";
                 //Sanwa
-                ReturnMessage = "$" + NodeAdr + "ACK:" + Command+"\r";
+                if (Type.Equals("GET"))
+                {
+                    switch (Command)
+                    {
+                        case "RIO__":
+                            switch (Value)
+                            {
+                                case "004":
+                                    ReturnValue = ":" + Value + ",0";
+                                    break;
+                                case "005":
+                                    ReturnValue = ":" + Value + ",0";
+                                    break;
+                                case "008":
+                                    ReturnValue = ":" + Value + ",0";
+                                    break;
+                                case "009":
+                                    ReturnValue = ":" + Value + ",0";
+                                    break;
+                                default:
+                                    ReturnValue = ":" + Value + ",0";
+                                    break;
+                            }
+                            break;
+                    }
+                    
+                }
+                
+                ReturnMessage = "$" + NodeAdr + "ACK:" + Command + ReturnValue + "\r";
                 Comm.Send(handler, ReturnMessage);
                 FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + ReturnMessage);
 
@@ -106,13 +135,23 @@ namespace EQP_Sim
             {
                 if (!Type.Equals("FIN"))
                 {
-                    ReturnMessage = TDK_A("ACK:" + Command);
+                    string ReturnValue = "";
+                    if (Type.Equals("GET"))
+                    {
+                        switch (Command)
+                        {
+                            case "STATE":
+                                ReturnValue = "/00000000100110111000"; 
+                                break;
+                        }
+                    }
+                    ReturnMessage = TDK_A("ACK:" + Command + ReturnValue);
                     Comm.Send(handler, ReturnMessage);
                     FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + "ACK:" + Command);
 
                     //System.Threading.Thread.Sleep(100);
 
-                    ReturnMessage = TDK_A("INF:" + Command);
+                    ReturnMessage = TDK_A("INF:" + Command + ReturnValue);
                     Comm.Send(handler, ReturnMessage);
                     FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + "INF:" + Command);
                 }

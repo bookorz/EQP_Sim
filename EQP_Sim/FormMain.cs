@@ -143,17 +143,20 @@ namespace EQP_Sim
                             case "STATE":
                                 ReturnValue = "/00000000100110111000"; 
                                 break;
+                            case "MAPRD":
+                                ReturnValue = "/1000000000000000000000000";
+                                break;
                         }
                     }
                     ReturnMessage = TDK_A("ACK:" + Command + ReturnValue);
                     Comm.Send(handler, ReturnMessage);
-                    FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + "ACK:" + Command);
+                    FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + "ACK:" + Command + ReturnValue);
 
                     //System.Threading.Thread.Sleep(100);
 
                     ReturnMessage = TDK_A("INF:" + Command + ReturnValue);
                     Comm.Send(handler, ReturnMessage);
-                    FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + "INF:" + Command);
+                    FormMainUpdate.LogUpdate(handler.RemoteEndPoint.ToString() + " Snd:" + "INF:" + Command + ReturnValue);
                 }
                 //TDK
                 //ReturnMessage =  NodeAdr + "ACK:" + Command;
